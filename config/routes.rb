@@ -7,7 +7,6 @@ Rails.application.routes.draw do
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
-	get 'request_token' => 'application#request_token'
 	get 'authorize' => 'application#authorize'
 	get 'callback' => 'application#callback'
 

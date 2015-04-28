@@ -10,32 +10,26 @@ class ApplicationController < ActionController::Base
 	def index
 	end
 
-	def request_token
-		callback_url = "#{root_url}callback"
-		session[:authorize_url] = @user.evernote_client.request_token(
-			oauth_callback: callback_url
-	  ).authorize_url
-		redirect_to '/authorize'
-	end
-
 	def authorize
-		if session[:authorize_url]
-			redirect_to session[:authorize_url]
-		else
-			redirect_to '/request_token'
-		end
+		callback_url = "#{root_url}callback"
+		request_token = @user.evernote_client.request_token(oauth_callback: callback_url)
+		session[:token] = request_token.token
+		session[:secret] = request_token.secret
+		redirect_to request_token.authorize_url
 	end
 
-	def callback 
-		unless params[:oauth_verifier] || session[:authorize_url]
-			redirect_to '/request_token'
+	def callback
+		unless params[:oauth_verifier]
+			redirect_to '/authorize'
 		end
-		session[:access_token] = session[:request_token].get_access_token(:oauth_verifier => session[:oauth_verifier])
-		redirect '/list'
+		request_token = OAuth::RequestToken.new @user.evernote_client, session[:token], session[:secret]
+		access_token = request_token.get_access_token(oauth_verifier: params[:oauth_verifier])
+		@user.update_attribute :access_token, access_token.token
+		binding.pry
+		redirect '/'
 	end
 
 private
-
 	def get_user
 		@user = User.first || User.create
 	end
