@@ -22,10 +22,8 @@ class ApplicationController < ActionController::Base
 		unless params[:oauth_verifier]
 			redirect_to '/authorize'
 		end
-		request_token = OAuth::RequestToken.new @user.evernote_client, session[:token], session[:secret]
-		access_token = request_token.get_access_token(oauth_verifier: params[:oauth_verifier])
-		@user.update_attribute :access_token, access_token.token
-		binding.pry
+		access_token = @user.evernote_client.authorize session[:token], session[:secret], {oauth_verifier: params[:oauth_verifier]}
+		@user.update_attribute :auth_token, access_token.token
 		redirect '/'
 	end
 
