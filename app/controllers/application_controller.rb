@@ -8,6 +8,16 @@ class ApplicationController < ActionController::Base
 	before_filter :get_user
 
 	def index
+		@notebook = @user.evernote_client.note_store.listNotebooks.first
+		filter = Evernote::EDAM::NoteStore::NoteFilter.new
+		filter.words = "created:day-1"
+
+		spec = Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+		spec.includeTitle = true
+		spec.includeCreated = true
+		spec.includeTagGuids = true
+
+		@notes = @user.note_store.findNotesMetadata(@user.auth_token, filter, 0, 100, spec).notes
 	end
 
 	def authorize
@@ -24,7 +34,7 @@ class ApplicationController < ActionController::Base
 		end
 		access_token = @user.evernote_client.authorize session[:token], session[:secret], {oauth_verifier: params[:oauth_verifier]}
 		@user.update_attribute :auth_token, access_token.token
-		redirect '/'
+		redirect_to '/'
 	end
 
 private
