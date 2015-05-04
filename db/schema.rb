@@ -11,15 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504152508) do
+ActiveRecord::Schema.define(version: 20150504171117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "digestions", force: true do |t|
+    t.integer  "digest_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "digestions", ["digest_id"], name: "index_digestions_on_digest_id", using: :btree
+
+  create_table "digests", force: true do |t|
+    t.string   "name"
+    t.text     "tags",       default: [], array: true
+    t.string   "recurrence"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "notes", force: true do |t|
     t.integer  "note_id"
     t.text     "tags",            default: [], array: true
     t.datetime "note_created_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|

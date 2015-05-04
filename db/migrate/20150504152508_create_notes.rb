@@ -4,6 +4,8 @@ class CreateNotes < ActiveRecord::Migration
       t.integer :note_id
       t.text :tags, array: true, default: []
       t.datetime :note_created_at
+
+      t.timestamps
     end
   end
 end
