@@ -1,3 +1,4 @@
+v1.0
 * Come up with filter for evernote that gets the desired new data:
     New notes from the last day
     Title
@@ -9,3 +10,9 @@
 * Style email template
 * Add jobs
 * Add mailer
+
+v2.0
+* Add user preferences
+	Which tags go out at what time
+* username/password
+* user interface
