@@ -9,41 +9,44 @@
 #
 
 class User < ActiveRecord::Base
-	@client = nil
-	@note_store = nil
-	@notebook = nil
-	@new_notes = nil
+  has_many :review_digests
+  has_many :notes
 
-	def evernote_client
-		@client ||= EvernoteOAuth::Client.new(token: self.auth_token,
-																				 consumer_key: ENV['EVERNOTE_KEY'],
-																				 consumer_secret: ENV['EVERNOTE_SECRET'],
-																				 sandbox: ENV['SANDBOX'])
-	end
+  @client = nil
+  @note_store = nil
+  @notebook = nil
+  @new_notes = nil
 
-	def notebook
-		@notebook ||= note_store.listNotebooks.first
-	end
+  def evernote_client
+    @client ||= EvernoteOAuth::Client.new(token: self.auth_token,
+                                          consumer_key: ENV['EVERNOTE_KEY'],
+                                          consumer_secret: ENV['EVERNOTE_SECRET'],
+                                          sandbox: ENV['SANDBOX'])
+  end
 
-	def process_new_notes
-		# Get all reviewable notes from the past day, adds them to the database, and caches them in @new_notes
-		filter = Evernote::EDAM::NoteStore::NoteFilter.new
-		filter.words = "created:day-1"
+  def notebook
+    @notebook ||= note_store.listNotebooks.first
+  end
 
-		spec = Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-		spec.includeTitle = true
-		spec.includeCreated = true
-		spec.includeTagGuids = true
+  def process_new_notes
+    # Get all reviewable notes from the past day, adds them to the database, and caches them in @new_notes
+    filter = Evernote::EDAM::NoteStore::NoteFilter.new
+    filter.words = "created:day-1"
 
-		notes = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
-		@new_notes = notes
-	end
+    spec = Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
+    spec.includeTitle = true
+    spec.includeCreated = true
+    spec.includeTagGuids = true
 
-	def notes_for_digest(digest)
-		
-	end
+    notes = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
+    @new_notes = notes
+  end
 
-	def note_store
-		@note_store ||= evernote_client.note_store
-	end
+  def notes_for_digest(digest)
+
+  end
+
+  def note_store
+    @note_store ||= evernote_client.note_store
+  end
 end

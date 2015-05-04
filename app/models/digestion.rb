@@ -9,5 +9,7 @@
 #
 
 class Digestion < ActiveRecord::Base
-
+  belongs_to :review_digest
+  has_many :notes_digestions
+  has_many :notes, through: :notes_digestions
 end
