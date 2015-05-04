@@ -15,8 +15,9 @@
 
 class ReviewDigest < ActiveRecord::Base
   # Recurrence is formatted as such: "VALUE;UNIT;TIME"
-  # For example, a daily digest at 12 PM Eastern Daylight Time - "1;day;12:00-0400"
-  TIME_FORMAT = "%H:%M%Z"
+  # For example, a daily digest at 12PM - "1;day;12:00"
+  # All datetimes are stored in UTC and converted to the User's preferred timezone in the frontend
+  TIME_FORMAT = "%H:%M"
 
   belongs_to :user
   has_many :digestions
@@ -32,6 +33,6 @@ class ReviewDigest < ActiveRecord::Base
 
   def generate_next_occurrence
     value, unit, _ = self.recurrence.split(';')
-    self.update_attribute :next_occurrence, self.next_occurrence + value.send(unit)
+    self.update_attribute :next_occurrence, self.previous_occurrence + value.to_i.send(unit)
   end
 end

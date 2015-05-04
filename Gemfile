@@ -44,3 +44,8 @@ gem 'evernote_oauth'
 gem 'dotenv-rails'
 
 gem 'annotate'
+
+group :test do
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+end
