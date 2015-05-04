@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504171417) do
+ActiveRecord::Schema.define(version: 20150504172540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,7 +30,10 @@ ActiveRecord::Schema.define(version: 20150504171417) do
     t.datetime "note_created_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "notes", ["user_id"], name: "index_notes_on_user_id", using: :btree
 
   create_table "notes_digestions", force: true do |t|
     t.integer  "note_id"
@@ -48,7 +51,10 @@ ActiveRecord::Schema.define(version: 20150504171417) do
     t.string   "recurrence"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
+
+  add_index "review_digests", ["user_id"], name: "index_review_digests_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "auth_token"
