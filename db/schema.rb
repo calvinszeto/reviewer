@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504172540) do
+ActiveRecord::Schema.define(version: 20150504211633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,11 +47,13 @@ ActiveRecord::Schema.define(version: 20150504172540) do
 
   create_table "review_digests", force: true do |t|
     t.string   "name"
-    t.text     "tags",       default: [], array: true
+    t.text     "tags",                default: [], array: true
     t.string   "recurrence"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "next_occurrence"
+    t.datetime "previous_occurrence"
   end
 
   add_index "review_digests", ["user_id"], name: "index_review_digests_on_user_id", using: :btree
