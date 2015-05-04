@@ -8,16 +8,6 @@ class ApplicationController < ActionController::Base
 	before_filter :get_user
 
 	def index
-		@notebook = @user.evernote_client.note_store.listNotebooks.first
-		filter = Evernote::EDAM::NoteStore::NoteFilter.new
-		filter.words = "created:day-1"
-
-		spec = Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
-		spec.includeTitle = true
-		spec.includeCreated = true
-		spec.includeTagGuids = true
-
-		@notes = @user.note_store.findNotesMetadata(@user.auth_token, filter, 0, 100, spec).notes
 	end
 
 	def authorize
