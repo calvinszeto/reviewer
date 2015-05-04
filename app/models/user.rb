@@ -1,7 +1,18 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id         :integer          not null, primary key
+#  auth_token :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class User < ActiveRecord::Base
 	@client = nil
 	@note_store = nil
 	@notebook = nil
+	@new_notes = nil
 
 	def evernote_client
 		@client ||= EvernoteOAuth::Client.new(token: self.auth_token,
@@ -14,7 +25,8 @@ class User < ActiveRecord::Base
 		@notebook ||= note_store.listNotebooks.first
 	end
 
-	def new_notes
+	def process_new_notes
+		# Get all reviewable notes from the past day, adds them to the database, and caches them in @new_notes
 		filter = Evernote::EDAM::NoteStore::NoteFilter.new
 		filter.words = "created:day-1"
 
@@ -23,7 +35,12 @@ class User < ActiveRecord::Base
 		spec.includeCreated = true
 		spec.includeTagGuids = true
 
-		note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
+		notes = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
+		@new_notes = notes
+	end
+
+	def notes_for_digest(digest)
+		
 	end
 
 	def note_store

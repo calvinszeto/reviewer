@@ -42,3 +42,5 @@ gem 'pry'
 gem 'evernote_oauth'
 
 gem 'dotenv-rails'
+
+gem 'annotate'
