@@ -3,7 +3,7 @@
 # Table name: notes
 #
 #  id              :integer          not null, primary key
-#  note_id         :integer
+#  evernote_id     :integer
 #  tags            :text             default([]), is an Array
 #  note_created_at :datetime
 #  created_at      :datetime
@@ -13,6 +13,6 @@
 
 FactoryGirl.define do
   factory :note do
-
+    tags %w(math science)
   end
 end
