@@ -24,6 +24,8 @@ class ReviewDigest < ActiveRecord::Base
 
   before_save :generate_first_occurrence, if: "previous_occurrence.blank?"
 
+  scope :passed, -> { where('next_occurrence < ?', DateTime.now) }
+
   def generate_first_occurrence
     # Set the first occurrence to today at the requested time
     _, _, time = self.recurrence.split(';')

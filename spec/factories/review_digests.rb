@@ -17,7 +17,7 @@ FactoryGirl.define do
   factory :review_digest do
     sequence(:name) {|n| "review digest #{n}"}
     tags { %w(math science history french computers).take(3)}
-    recurrence {"1;day;08:00-0400"}
+    recurrence {"1;day;08:00"}
     user
   end
 end

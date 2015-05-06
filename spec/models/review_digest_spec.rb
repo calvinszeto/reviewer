@@ -16,6 +16,16 @@
 require 'rails_helper'
 
 RSpec.describe ReviewDigest, type: :model do
+  context "passed scope" do
+    it "should return ReviewDigests whose next occurrence time has passed" do
+      passed_digest = FactoryGirl.create :review_digest
+      future_digest = FactoryGirl.create :review_digest
+      passed_digest.update_attribute :next_occurrence, DateTime.now - 1.minute
+      future_digest.update_attribute :next_occurrence, DateTime.now + 1.day
+      expect(ReviewDigest.passed).to eq([passed_digest])
+    end
+  end
+
   context "generate_first_occurence" do
     it "should set the previous occurence as today at the requested time" do
       time = DateTime.now
