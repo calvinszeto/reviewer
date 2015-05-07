@@ -15,9 +15,9 @@ require 'rails_helper'
 
 RSpec.describe Note, type: :model do
   context 'Note.for_digest' do
-    let(:expected_note) { FactoryGirl.create(:note) }
-    let(:unexpected_note) { FactoryGirl.create(:note, tags: ["burgers"]) }
-    let(:review_digest) { FactoryGirl.create(:review_digest) }
+    let!(:expected_note) { FactoryGirl.create(:note) }
+    let!(:unexpected_note) { FactoryGirl.create(:note, tags: ["burgers"]) }
+    let!(:review_digest) { FactoryGirl.create(:review_digest) }
 
     it 'should return notes which share tags with the digest' do
       expect(Note.for_digest(review_digest)).to eq([expected_note])

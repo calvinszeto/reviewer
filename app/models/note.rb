@@ -17,7 +17,7 @@ class Note < ActiveRecord::Base
   has_many :digestions, through: :notes_digestions
 
   def self.for_digest(digest)
-    digest_tags_sql = "{#{digest.tags.map{|tag| ActiveRecord::Base::sanitize(tag)}.join(",")}}"
+    digest_tags_sql = "{#{digest.tags.map{|tag| "\"#{tag}\""}.join(", ")}}"
     self.where("tags && ?", digest_tags_sql)
   end
 
