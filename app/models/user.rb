@@ -18,7 +18,6 @@ class User < ActiveRecord::Base
   @client = nil
   @note_store = nil
   @notebook = nil
-  @new_notes = nil
 
   def evernote_client
     @client ||= EvernoteOAuth::Client.new(token: self.auth_token,
@@ -50,11 +49,7 @@ class User < ActiveRecord::Base
     spec.includeTagGuids = true
 
     notes = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
-    @new_notes = notes
-  end
-
-  def notes_for_digest(digest)
-
+    # TODO: Save notes to database
   end
 
   def note_store
