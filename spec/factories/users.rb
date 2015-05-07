@@ -6,6 +6,7 @@
 #  auth_token :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  email      :string(255)
 #
 
 FactoryGirl.define do

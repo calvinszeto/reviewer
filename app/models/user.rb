@@ -6,7 +6,10 @@
 #  auth_token :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  email      :string(255)
 #
+
+require 'time'
 
 class User < ActiveRecord::Base
   has_many :review_digests
@@ -28,10 +31,18 @@ class User < ActiveRecord::Base
     @notebook ||= note_store.listNotebooks.first
   end
 
+  def evernote_date_filter
+    # Pull notes from since the latest note
+    # Or, pull notes from the last week if no notes have ever been pulled
+    latest_date = notes.order(created_at: :desc).first.try(:created_at)
+    filter = latest_date.nil? ? 'day-7' : latest_date.utc.iso8601.gsub(/:|-/, '')
+    "created:#{filter}"
+  end
+
   def process_new_notes
-    # Get all reviewable notes from the past day, adds them to the database, and caches them in @new_notes
+    # Get all reviewable notes since the last one, adds them to the database, and caches them in @new_notes
     filter = Evernote::EDAM::NoteStore::NoteFilter.new
-    filter.words = "created:day-1"
+    filter.words = evernote_date_filter
 
     spec = Evernote::EDAM::NoteStore::NotesMetadataResultSpec.new
     spec.includeTitle = true
