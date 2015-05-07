@@ -18,13 +18,16 @@ class Note < ActiveRecord::Base
 
   def self.for_digest(digest)
     digest_tags_sql = "{#{digest.tags.map{|tag| "\"#{tag}\""}.join(", ")}}"
-    self.where("tags && ?", digest_tags_sql)
+    # Notes which match the tags of the digest
+    digest_notes = self.where("tags && ?", digest_tags_sql)
+    # Of those notes, notes whose day of next review occurs on or before the digests next planned digestion
+    digest_notes.select {|note| note.day_of_next_review <= digest.next_occurrence.to_date}
   end
 
   def day_of_next_review
     n = digestions.count + 1
     last_digestion = digestions.order(created_at: :desc).first
-    (last_digestion.created_at + nth_lucas_number(n).days).to_date
+    last_digestion.present? ? (last_digestion.created_at + nth_lucas_number(n).days).to_date : Date.today
   end
 
   def nth_lucas_number(n)
