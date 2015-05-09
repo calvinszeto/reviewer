@@ -14,5 +14,6 @@
 FactoryGirl.define do
   factory :note do
     tags %w(math science)
+    evernote_id { (Random.rand * 100000).to_i }
   end
 end

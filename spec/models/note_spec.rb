@@ -34,7 +34,6 @@ RSpec.describe Note, type: :model do
         digestion = FactoryGirl.create(:notes_digestion, note: unexpected_note).digestion
         digestion.update_attribute :created_at, DateTime.now - 2.days
       end
-      binding.pry
       expect(Note.for_digest(review_digest)).to eq([expected_note])
     end
   end

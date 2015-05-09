@@ -16,6 +16,8 @@ class Note < ActiveRecord::Base
   has_many :notes_digestions
   has_many :digestions, through: :notes_digestions
 
+  validates :evernote_id, uniqueness: true
+
   def self.for_digest(digest)
     digest_tags_sql = "{#{digest.tags.map{|tag| "\"#{tag}\""}.join(", ")}}"
     # Notes which match the tags of the digest
