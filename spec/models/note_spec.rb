@@ -3,12 +3,13 @@
 # Table name: notes
 #
 #  id              :integer          not null, primary key
-#  evernote_id     :integer
 #  tags            :text             default([]), is an Array
 #  note_created_at :datetime
 #  created_at      :datetime
 #  updated_at      :datetime
 #  user_id         :integer
+#  title           :string(255)
+#  evernote_id     :string(255)
 #
 
 require 'rails_helper'
@@ -35,6 +36,25 @@ RSpec.describe Note, type: :model do
         digestion.update_attribute :created_at, DateTime.now - 2.days
       end
       expect(Note.for_digest(review_digest)).to eq([expected_note])
+    end
+  end
+
+  context 'collect_content' do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:note) { FactoryGirl.create(:note, user: user) }
+
+    before(:each) do
+      note_store = double
+      evernote_note = double
+      allow_any_instance_of(User).to receive(:note_store) { note_store }
+      allow(note_store).to receive(:getNote) { evernote_note }
+      allow(evernote_note).to receive(:content) { "My Note Content" }
+    end
+
+    it 'should make a request for the note content and attach it to the object' do
+      expect{
+        note.collect_content
+      }.to change{note.content}.from(nil).to("My Note Content")
     end
   end
 
