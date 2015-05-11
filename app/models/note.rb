@@ -18,12 +18,19 @@ class Note < ActiveRecord::Base
 
   validates :evernote_id, uniqueness: true
 
+  attr_accessor :content
+
   def self.for_digest(digest)
     digest_tags_sql = "{#{digest.tags.map{|tag| "\"#{tag}\""}.join(", ")}}"
     # Notes which match the tags of the digest
     digest_notes = self.where("tags && ?", digest_tags_sql)
     # Of those notes, notes whose day of next review occurs on or before the digests next planned digestion
     digest_notes.select {|note| note.day_of_next_review <= digest.next_occurrence.to_date}
+  end
+
+  def collect_content
+    evernote = user.note_store.getNote(user.auth_token, self.evernote_id, true, false, false, false)
+    self.content = evernote.content
   end
 
   def day_of_next_review

@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
     spec.includeTagGuids = true
 
     notes = note_store.findNotesMetadata(auth_token, filter, 0, 100, spec).notes
-    tags = note_store.listTags(@user.auth_token)
+    tags = note_store.listTags(auth_token)
     notes.each do |note|
       note_tags = tags.select{|tag| note.tagGuids.include? tag.guid}
       Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name)

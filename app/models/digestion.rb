@@ -13,4 +13,10 @@ class Digestion < ActiveRecord::Base
   belongs_to :review_digest
   has_many :notes_digestions
   has_many :notes, through: :notes_digestions
+
+  def execute
+    notes_cache = self.notes
+    notes_cache.each {|note| note.collect_content }
+    DigestionMailer.digestion_email(self, notes_cache).deliver_now
+  end
 end
