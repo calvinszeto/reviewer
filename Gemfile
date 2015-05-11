@@ -45,6 +45,8 @@ gem 'dotenv-rails'
 
 gem 'annotate'
 
+gem 'postmark-rails'
+
 group :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
