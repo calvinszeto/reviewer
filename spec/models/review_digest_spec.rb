@@ -55,4 +55,32 @@ RSpec.describe ReviewDigest, type: :model do
       }.to change{digest.previous_occurrence.try(:to_s, :long)}.from(nil).to(time.to_s(:long))
     end
   end
+
+  context 'run_digestion' do
+    let(:review_digest) { FactoryGirl.create(:review_digest)}
+    let(:notes) do
+      5.times { FactoryGirl.create(:note) }
+      Note.all
+    end
+
+    before(:each) do
+      allow_any_instance_of(Digestion).to receive(:execute)
+      allow(Note).to receive(:for_digest) { notes }
+    end
+
+    it 'should create and execute a new digestion' do
+      expect_any_instance_of(Digestion).to receive(:execute)
+      expect{
+        review_digest.run_digestion
+      }.to change{Digestion.count}.from(0).to(1)
+      expect(Digestion.first.review_digest).to eq(review_digest)
+      expect(Digestion.first.notes.count).to eq(5)
+      expect(Digestion.first.email).to eq(review_digest.user.email)
+    end
+
+    it 'should generate the next occurrence' do
+      expect_any_instance_of(ReviewDigest).to receive(:generate_next_occurrence)
+      review_digest.run_digestion
+    end
+  end
 end

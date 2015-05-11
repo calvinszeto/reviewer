@@ -38,4 +38,11 @@ class ReviewDigest < ActiveRecord::Base
     self.update_attribute :next_occurrence, former_occurrence + value.to_i.send(unit)
     self.update_attribute :previous_occurrence, former_occurrence
   end
+
+  def run_digestion
+    digestion = Digestion.create(review_digest: self, email: user.email)
+    Note.for_digest(self).each { |note| NotesDigestion.create(note: note, digestion: digestion) }
+    digestion.execute
+    generate_next_occurrence
+  end
 end
