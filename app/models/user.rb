@@ -26,6 +26,10 @@ class User < ActiveRecord::Base
                                           sandbox: ENV['SANDBOX'])
   end
 
+  def note_store
+    @note_store ||= evernote_client.note_store
+  end
+
   def notebook
     @notebook ||= note_store.listNotebooks.first
   end
@@ -54,9 +58,5 @@ class User < ActiveRecord::Base
       note_tags = tags.select{|tag| note.tagGuids.include? tag.guid}
       Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name)
     end
-  end
-
-  def note_store
-    @note_store ||= evernote_client.note_store
   end
 end
