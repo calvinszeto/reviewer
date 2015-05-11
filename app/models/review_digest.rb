@@ -22,19 +22,20 @@ class ReviewDigest < ActiveRecord::Base
   belongs_to :user
   has_many :digestions
 
-  before_save :generate_first_occurrence, if: "previous_occurrence.blank?"
+  before_save :generate_first_occurrence, if: "next_occurrence.blank?"
 
   scope :passed, -> { where('next_occurrence < ?', DateTime.now) }
 
   def generate_first_occurrence
     # Set the first occurrence to today at the requested time
     _, _, time = self.recurrence.split(';')
-    self.update_attribute :previous_occurrence, DateTime.strptime(time, TIME_FORMAT)
-    self.generate_next_occurrence
+    self.update_attribute :next_occurrence, DateTime.strptime(time, TIME_FORMAT) + 1.day
   end
 
   def generate_next_occurrence
+    former_occurrence = self.next_occurrence
     value, unit, _ = self.recurrence.split(';')
-    self.update_attribute :next_occurrence, self.previous_occurrence + value.to_i.send(unit)
+    self.update_attribute :next_occurrence, former_occurrence + value.to_i.send(unit)
+    self.update_attribute :previous_occurrence, former_occurrence
   end
 end
