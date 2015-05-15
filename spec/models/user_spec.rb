@@ -88,9 +88,22 @@ RSpec.describe User, type: :model do
   end
 
   context 'run_passed_review_digests' do
+    let(:digests) { double }
+    let(:digest) { double }
+
+    before(:each) do
+      allow(user).to receive(:process_new_notes)
+      allow(user).to receive(:review_digests) { digests }
+      allow(digests).to receive(:passed) { [digest] }
+      allow(digest).to receive(:run_digestion)
+    end
+
+    it 'should process any new notes' do
+      expect(user).to receive(:process_new_notes)
+      user.run_passed_review_digests
+    end
+
     it 'should call run_digestion on the passed review digests belonging to the user' do
-      digests = double
-      digest = double
       expect(user).to receive(:review_digests) { digests }
       expect(digests).to receive(:passed) { [digest] }
       expect(digest).to receive(:run_digestion)

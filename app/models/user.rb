@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   end
 
   def run_passed_review_digests
+    process_new_notes
     review_digests.passed.map(&:run_digestion)
   end
 end
