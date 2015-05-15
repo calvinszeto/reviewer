@@ -59,4 +59,8 @@ class User < ActiveRecord::Base
       Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name)
     end
   end
+
+  def run_passed_review_digests
+    review_digests.passed.map(&:run_digestion)
+  end
 end

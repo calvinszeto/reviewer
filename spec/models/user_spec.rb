@@ -86,4 +86,15 @@ RSpec.describe User, type: :model do
       expect(Note.first.tags).to eq(["My Tag"])
     end
   end
+
+  context 'run_passed_review_digests' do
+    it 'should call run_digestion on the passed review digests belonging to the user' do
+      digests = double
+      digest = double
+      expect(user).to receive(:review_digests) { digests }
+      expect(digests).to receive(:passed) { [digest] }
+      expect(digest).to receive(:run_digestion)
+      user.run_passed_review_digests
+    end
+  end
 end
