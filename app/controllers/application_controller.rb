@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
 	before_filter :get_user
 
 	def index
+    @review_digests = @user.review_digests.includes(:digestions)
 	end
 
 	def authorize

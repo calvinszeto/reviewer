@@ -1,0 +1,32 @@
+<div class="container">
+  <h1>Review Digests for <%= @user.email %></h1>
+  <ul class="list-group">
+    <% @review_digests.each do |digest| %>
+        <li class="list-group-item">
+          <span class="badge"><%= digest.digestions.count %></span>
+          <dl>
+            <dd>Name</dd>
+            <dt><%= digest.name %></dt>
+            <dd>Created At</dd>
+            <dt><%= digest.created_at %></dt>
+            <dd>Tags</dd>
+            <dt><%= digest.tags %></dt>
+            <dd>Recurrence</dd>
+            <dt><%= digest.recurrence %></dt>
+            <dd>Next Occurrence</dd>
+            <dt><%= digest.next_occurrence %></dt>
+          </dl>
+          <ul>
+            <% digest.digestions.each do |digestion| %>
+                <li>
+              <span>
+                <p>Sent to: <%= digestion.email %></p>
+                <p>on: <%= digestion.created_at %></p>
+              </span>
+                </li>
+            <% end %>
+          </ul>
+        </li>
+    <% end %>
+  </ul>
+</div>
