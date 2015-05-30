@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     @client ||= EvernoteOAuth::Client.new(token: self.auth_token,
                                           consumer_key: ENV['EVERNOTE_KEY'],
                                           consumer_secret: ENV['EVERNOTE_SECRET'],
-                                          sandbox: ENV['SANDBOX'])
+                                          sandbox: ENV['SANDBOX'] == true)
   end
 
   def note_store
