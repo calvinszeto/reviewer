@@ -85,6 +85,12 @@ RSpec.describe User, type: :model do
       user.process_new_notes
       expect(Note.first.tags).to eq(["My Tag"])
     end
+
+    it 'should work if there are no tags' do
+      allow(note).to receive(:tagGuids) { nil }
+      user.process_new_notes
+      expect(Note.first.tags).to eq([])
+    end
   end
 
   context 'run_passed_review_digests' do
@@ -96,6 +102,7 @@ RSpec.describe User, type: :model do
       allow(user).to receive(:review_digests) { digests }
       allow(digests).to receive(:passed) { [digest] }
       allow(digest).to receive(:run_digestion)
+      allow(digest).to receive(:id)
     end
 
     it 'should process any new notes' do
