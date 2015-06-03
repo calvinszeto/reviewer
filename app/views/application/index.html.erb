@@ -8,20 +8,23 @@
             <dd>Name</dd>
             <dt><%= digest.name %></dt>
             <dd>Created At</dd>
-            <dt><%= digest.created_at %></dt>
+            <dt><%= digest.created_at.to_s(:long_ordinal) %></dt>
             <dd>Tags</dd>
-            <dt><%= digest.tags %></dt>
+            <dt><%= digest.tags.join(', ') %></dt>
             <dd>Recurrence</dd>
-            <dt><%= digest.recurrence %></dt>
+
+            <% amount, frequency, time = digest.recurrence.split(';')%>
+
+            <dt><%= "Every #{amount} #{frequency} at #{time}" %></dt>
             <dd>Next Occurrence</dd>
-            <dt><%= digest.next_occurrence %></dt>
+            <dt><%= digest.next_occurrence.to_s(:long_ordinal) %></dt>
           </dl>
           <ul>
             <% digest.digestions.each do |digestion| %>
                 <li>
               <span>
                 <p>Sent to: <%= digestion.email %></p>
-                <p>on: <%= digestion.created_at %></p>
+                <p>on: <%= digestion.created_at.to_s(:long_ordinal) %></p>
               </span>
                 </li>
             <% end %>
