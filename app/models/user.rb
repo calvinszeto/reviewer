@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
     notes.each do |note|
       note_tags = note.tagGuids.nil? ? [] : tags.select{|tag| note.tagGuids.include? tag.guid}
       Rails.logger.info "Adding note for user #{self.email}: #{note.title} with tags #{note_tags.map(&:name).join(', ')}"
-      Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name)
+      Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name), user: self
     end
   end
 
