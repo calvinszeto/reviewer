@@ -46,6 +46,8 @@ gem 'dotenv-rails'
 
 gem 'annotate'
 
+gem 'nokogiri'
+
 group :production do
   gem 'rails_12factor'
   gem 'postmark-rails'

@@ -29,9 +29,16 @@ class Note < ActiveRecord::Base
     digest_notes.select {|note| note.day_of_next_review <= Date.today}
   end
 
+  def self.parse_enml(enml)
+    xml = Nokogiri::XML(enml)
+    html = xml.at_css('en-note')
+    html.name = 'div'
+    html.to_html
+  end
+
   def collect_content
     evernote = user.note_store.getNote(user.auth_token, self.evernote_id, true, false, false, false)
-    self.content = evernote.content
+    self.content = Note.parse_enml(evernote.content)
   end
 
   def day_of_next_review

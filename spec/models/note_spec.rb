@@ -47,13 +47,33 @@ RSpec.describe Note, type: :model do
       evernote_note = double
       allow_any_instance_of(User).to receive(:note_store) { note_store }
       allow(note_store).to receive(:getNote) { evernote_note }
-      allow(evernote_note).to receive(:content) { "My Note Content" }
+      allow(evernote_note).to receive(:content) { "<en-note>My Note Content</en-note>" }
     end
 
     it 'should make a request for the note content and attach it to the object' do
       expect{
         note.collect_content
-      }.to change{note.content}.from(nil).to("My Note Content")
+      }.to change{note.content}.from(nil).to("<div>My Note Content</div>")
+    end
+  end
+
+  context 'parse_enml' do
+    let(:enml) do
+      '<?xml version="1.0" encoding="UTF-8"?>'+
+      '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'+
+      '<en-note><div>Here is some test data:<br clear="none"/></div>'+
+      '<ul><li>testing<br clear="none"/></li><li>testing 2'+
+      '<br clear="none"/></li></ul><div><span>我</span><span>看不到</span><span>你</span></div></en-note>'
+    end
+
+    let(:html) do
+      '<div><div>Here is some test data:<br clear="none"></div>'+
+      '<ul><li>testing<br clear="none"></li><li>testing 2'+
+      '<br clear="none"></li></ul><div><span>我</span><span>看不到</span><span>你</span></div></div>'
+    end
+
+    it 'should move the content into a div' do
+      expect(Note.parse_enml(enml).gsub(/\n/, '')).to eq(html)
     end
   end
 

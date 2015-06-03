@@ -2,7 +2,7 @@
 <html>
 <body>
    <% @notes.each do |note| %>
-     <%= note.content %>
+     <%= note.content.html_safe %>
    <% end %>
 </body>
 </html>
