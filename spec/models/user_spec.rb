@@ -102,6 +102,7 @@ RSpec.describe User, type: :model do
       allow(user).to receive(:review_digests) { digests }
       allow(digests).to receive(:passed) { [digest] }
       allow(digest).to receive(:run_digestion)
+      allow(digest).to receive(:name)
       allow(digest).to receive(:id)
     end
 

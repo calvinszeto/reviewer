@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
   def run_passed_review_digests
     process_new_notes
     review_digests.passed.each do |review_digest|
-      Rails.logger.info "Running a digestion for Review Digest #{review_digest.id}"
+      Rails.logger.info "Running a digestion for Review Digest #{review_digest.name} (#{review_digest.id})"
       review_digest.run_digestion
     end
   end

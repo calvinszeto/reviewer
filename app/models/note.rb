@@ -25,8 +25,8 @@ class Note < ActiveRecord::Base
     digest_tags_sql = "{#{digest.tags.map{|tag| "\"#{tag}\""}.join(", ")}}"
     # Notes which match the tags of the digest
     digest_notes = self.where("tags && ?", digest_tags_sql)
-    # Of those notes, notes whose day of next review occurs on or before the digests next planned digestion
-    digest_notes.select {|note| note.day_of_next_review <= digest.next_occurrence.to_date}
+    # Of those notes, notes whose day of next review occurs on or before today
+    digest_notes.select {|note| note.day_of_next_review <= Date.today}
   end
 
   def collect_content

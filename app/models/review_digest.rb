@@ -40,9 +40,15 @@ class ReviewDigest < ActiveRecord::Base
   end
 
   def run_digestion
-    digestion = Digestion.create(review_digest: self, email: user.email)
-    Note.for_digest(self).each { |note| NotesDigestion.create(note: note, digestion: digestion) }
-    digestion.execute
+    notes = Note.for_digest(self)
+    unless notes.empty?
+      digestion = Digestion.create(review_digest: self, email: user.email)
+      Note.for_digest(self).each { |note| NotesDigestion.create(note: note, digestion: digestion) }
+      digestion.execute
+      Rails.logger.info "Ran a digestion for #{notes.count} notes."
+    else
+      Rails.logger.info "No notes to review for this occurrence."
+    end
     generate_next_occurrence
   end
 end

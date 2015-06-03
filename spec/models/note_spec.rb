@@ -25,15 +25,14 @@ RSpec.describe Note, type: :model do
       expect(Note.for_digest(review_digest)).to eq([expected_note])
     end
 
-    it 'should return notes whose next review occurs on or before the next digestion date' do
-      review_digest.update_attribute :next_occurrence, DateTime.now + 1.day
+    it 'should return notes whose next review occurs on or before the current date' do
       # There should be a 3 day review
       digestion = FactoryGirl.create(:notes_digestion, note: expected_note).digestion
-      digestion.update_attribute :created_at, DateTime.now - 2.days
+      digestion.update_attribute :created_at, DateTime.now - 3.days
       # The next review isn't for 4 days
       2.times do
         digestion = FactoryGirl.create(:notes_digestion, note: unexpected_note).digestion
-        digestion.update_attribute :created_at, DateTime.now - 2.days
+        digestion.update_attribute :created_at, DateTime.now - 3.days
       end
       expect(Note.for_digest(review_digest)).to eq([expected_note])
     end
