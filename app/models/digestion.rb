@@ -17,6 +17,6 @@ class Digestion < ActiveRecord::Base
   def execute
     notes_cache = self.notes
     notes_cache.each {|note| note.collect_content }
-    DigestionMailer.digestion_email(self, notes_cache).deliver_now
+    DigestionMailer.digestion_email(self, notes_cache).deliver
   end
 end

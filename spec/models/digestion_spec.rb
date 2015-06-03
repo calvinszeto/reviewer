@@ -24,7 +24,7 @@ RSpec.describe Digestion, type: :model do
   before(:each) do
     mailer = double
     allow(DigestionMailer).to receive(:digestion_email) { mailer }
-    allow(mailer).to receive(:deliver_now)
+    allow(mailer).to receive(:deliver)
   end
 
   context 'execute' do
