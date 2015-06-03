@@ -56,12 +56,16 @@ class User < ActiveRecord::Base
     tags = note_store.listTags(auth_token)
     notes.each do |note|
       note_tags = tags.select{|tag| note.tagGuids.include? tag.guid}
+      Rails.logger.info "Adding note for user #{user.email}: #{note.title}"
       Note.create evernote_id: note.guid, title: note.title, tags: note_tags.map(&:name)
     end
   end
 
   def run_passed_review_digests
     process_new_notes
-    review_digests.passed.map(&:run_digestion)
+    review_digests.passed.each do |review_digest|
+      Rails.logger.info "Running a digestion for Review Digest #{review_digest.id}"
+      review_digest.run_digestion
+    end
   end
 end
