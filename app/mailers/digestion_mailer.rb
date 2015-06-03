@@ -1,5 +1,5 @@
 class DigestionMailer < ActionMailer::Base
-  default from: "szeto.calvin@gmail.com"
+  default from: "calvin@edenlew.com"
 
   def digestion_email(digestion, notes)
     @notes = notes
